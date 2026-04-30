@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="dashboard">
+      <!-- Topbar -->
+      <div class="topbar">
+        <h2>💰 Expense Tracker</h2>
+        <button onclick="logout()">Logout</button>
+      </div>
+
+      <!-- Welcome -->
+      <div class="card">
+        <h3>Welcome, <span id="username"></span></h3>
+      </div>
+
+      <!-- Summary -->
+      <div class="summary">
+        <div class="card income">
+          <h4>Income</h4>
+          <p id="income">₹0</p>
+        </div>
+
+        <div class="card expense">
+          <h4>Expense</h4>
+          <p id="expense">₹0</p>
+        </div>
+
+        <div class="card balance">
+          <h4>Balance</h4>
+          <p id="balance">₹0</p>
+        </div>
+      </div>
+
+      <!-- Add Transaction -->
+      <div class="card">
+        <h3>Add Transaction</h3>
+        <form id="transactionForm">
+          <input type="text" id="title" placeholder="Title" />
+          <input type="number" id="amount" placeholder="Amount" />
+
+          <select id="type">
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+
+          <button type="submit">Add Transaction</button>
+        </form>
+      </div>
+
+      <!-- Filters -->
+      <div class="card">
+        <h3>Filter</h3>
+        <select id="filter">
+          <option value="all">All</option>
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
+      </div>
+
+      <!-- Transaction List -->
+      <div class="card">
+        <h3>Transactions</h3>
+        <ul id="transactionList"></ul>
+        <button onclick="clearAll()">Clear All</button>
+      </div>
+    </div>
+
+    <script src="js/main.js"></script>
+  </body>
+</html>
