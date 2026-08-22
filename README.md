@@ -1,3 +1,4 @@
+# UNDER DEVELOPMENT STAGE
 # 💰 Smart Expense Manager
 
 A modern and responsive Expense Tracker Web Application that helps users manage their income, track expenses, and maintain personal budgets efficiently.
