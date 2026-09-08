@@ -1,25 +1,93 @@
 <!doctype html>
-<html>
-  <head>
-    <title>Signup</title>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Account - Fintrack Smart Expense Tracker</title>
+    <meta name="description" content="Sign up for Fintrack to take full control of your personal expenses, budgets, and savings." />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="css/style.css" />
-  </head>
-  <body>
-    <div class="container">
-      <h2>Signup</h2>
+</head>
+<body>
+    <div class="ambient-glow ambient-glow-1"></div>
+    <div class="ambient-glow ambient-glow-2"></div>
 
-      <form id="signupForm">
-        <input type="text" id="name" placeholder="Name" />
-        <input type="email" id="email" placeholder="Email" />
-        <input type="password" id="password" placeholder="Password" />
-        <p class="error" id="errorMsg"></p>
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <!-- Brand -->
+            <div class="brand-logo">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+                <span class="brand-name">Fintrack</span>
+            </div>
 
-        <button type="submit">Signup</button>
-      </form>
+            <div class="auth-header">
+                <h2>Create Your Account</h2>
+                <p>Start tracking your expenses and mastering your budget</p>
+            </div>
 
-      <p>Already have an account? <a href="index.html">Login</a></p>
+            <!-- Error Banner -->
+            <div class="error-banner" id="errorBanner">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span id="errorText">Please check your details</span>
+            </div>
+
+            <!-- Signup Form -->
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <div class="input-with-icon">
+                        <i class="fa-regular fa-user"></i>
+                        <input type="text" id="name" placeholder="John Doe" required autocomplete="name" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-with-icon">
+                        <i class="fa-regular fa-envelope"></i>
+                        <input type="email" id="email" placeholder="john@example.com" required autocomplete="email" />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-with-icon">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" id="password" placeholder="Min. 6 chars" required autocomplete="new-password" />
+                            <i class="fa-regular fa-eye password-toggle"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="currency">Currency</label>
+                        <select id="currency">
+                            <option value="INR">₹ INR (India)</option>
+                            <option value="USD">$ USD (US)</option>
+                            <option value="EUR">€ EUR (Europe)</option>
+                            <option value="GBP">£ GBP (UK)</option>
+                            <option value="JPY">¥ JPY (Japan)</option>
+                            <option value="CAD">CA$ CAD (Canada)</option>
+                            <option value="AUD">A$ AUD (Australia)</option>
+                            <option value="AED">AED (UAE)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 14px;">
+                    <i class="fa-solid fa-user-plus"></i> Create Free Account
+                </button>
+            </form>
+
+            <p style="font-size: 14px; color: var(--text-secondary); margin-top: 20px;">
+                Already have an account? <a href="index.html" style="font-weight: 600;">Sign In</a>
+            </p>
+        </div>
     </div>
 
+    <script src="js/storage.js"></script>
     <script src="js/auth.js"></script>
-  </body>
+</body>
 </html>
