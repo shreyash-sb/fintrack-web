@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fintrack - Smart Expense Tracker & AI Financial Intelligence</title>
+    <meta name="description" content="Master your personal finances with real-time cash flow tracking, intelligent category budgets, cloud receipt storage, and Google Gemini 3.5 Flash AI insights." />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="landing-body">
+    <div class="ambient-glow ambient-glow-1"></div>
+    <div class="ambient-glow ambient-glow-2"></div>
+
+    <!-- Navigation Bar: Authentication strictly in the Top-Right Corner -->
+    <header class="landing-header">
+        <div class="landing-brand">
+            <div class="brand-icon">
+                <i class="fa-solid fa-wallet"></i>
+            </div>
+            <span class="brand-name">Fintrack</span>
+            <span class="brand-tag">AI Powered</span>
+        </div>
+
+        <nav class="landing-nav">
+            <a href="#features" class="landing-nav-link">Features</a>
+            <a href="#sample-preview" class="landing-nav-link">Interactive Demo</a>
+        </nav>
+
+        <!-- Top Right Corner Actions -->
+        <div class="landing-auth-actions" id="landingNavActions">
+            <a href="login.html" class="btn btn-outline btn-sm" id="navSignInBtn">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In
+            </a>
+            <a href="signup.html" class="btn btn-primary btn-sm" id="navSignUpBtn">
+                <i class="fa-solid fa-user-plus"></i> Create Account
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content Area: Compact & Zero Unnecessary Space -->
+    <main class="landing-main">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-badge">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span>Next-Gen Personal Finance Intelligence</span>
+            </div>
+
+            <h1 class="hero-heading">
+                Master Your Money with <span class="gradient-text">AI-Driven Clarity</span>
+            </h1>
+
+            <p class="hero-lead">
+                Real-time expense tracking, automated bank statement reconciliation, monthly rollover, and your personal Gemini 3.5 Flash AI Financial Advisor.
+            </p>
+
+            <div class="hero-trust-row">
+                <div class="trust-item"><i class="fa-solid fa-shield-halved text-income"></i> 100% Private (Keys in RAM)</div>
+                <div class="trust-item"><i class="fa-solid fa-scale-balanced text-primary"></i> Integer-Safe Reconciliation</div>
+                <div class="trust-item"><i class="fa-solid fa-robot text-warning"></i> Gemini 3.5 Flash AI</div>
+                <div class="trust-item"><i class="fa-solid fa-bolt text-income"></i> Zero-Lag MySQL Sync</div>
+            </div>
+
+            <!-- Dynamic Interactive Live Workspace Preview -->
+            <div class="hero-preview-card" id="sample-preview">
+                <div class="preview-header">
+                    <div class="preview-dots">
+                        <span class="dot dot-red"></span>
+                        <span class="dot dot-yellow"></span>
+                        <span class="dot dot-green"></span>
+                    </div>
+                    <div class="preview-title-bar">fintrack.app/dashboard • Interactive Live Workspace Demo</div>
+                </div>
+
+                <div class="preview-content">
+                    <!-- Interactive Month Navigation & View Filter Bar -->
+                    <div class="demo-controls-bar">
+                        <div class="demo-month-nav">
+                            <button type="button" class="btn btn-outline btn-xs" id="demoPrevMonthBtn" title="Previous Month" aria-label="Previous Month">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </button>
+                            <span class="demo-month-display" id="demoMonthDisplay">
+                                <i class="fa-regular fa-calendar-days text-primary"></i>
+                                <strong id="demoMonthText">October 2026</strong>
+                            </span>
+                            <button type="button" class="btn btn-outline btn-xs" id="demoNextMonthBtn" title="Next Month" aria-label="Next Month">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- Dynamic Filter Tabs -->
+                        <div class="demo-tabs-group" role="tablist" aria-label="Demo view filters">
+                            <button type="button" class="demo-tab active" role="tab" aria-selected="true" data-tab="all" id="tabAll">
+                                <i class="fa-solid fa-list"></i> All <span class="tab-badge" id="badgeAll">5</span>
+                            </button>
+                            <button type="button" class="demo-tab" role="tab" aria-selected="false" data-tab="income" id="tabIncome">
+                                <i class="fa-solid fa-arrow-trend-up text-income"></i> Income <span class="tab-badge" id="badgeIncome">2</span>
+                            </button>
+                            <button type="button" class="demo-tab" role="tab" aria-selected="false" data-tab="expense" id="tabExpense">
+                                <i class="fa-solid fa-arrow-trend-down text-expense"></i> Expenses <span class="tab-badge" id="badgeExpense">3</span>
+                            </button>
+                            <button type="button" class="demo-tab" role="tab" aria-selected="false" data-tab="ai" id="tabAi">
+                                <i class="fa-solid fa-robot text-warning"></i> AI Advisor
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic KPI Summary Cards -->
+                    <div class="preview-kpi-row">
+                        <div class="preview-stat-card">
+                            <span class="stat-label">Net Balance</span>
+                            <span class="stat-val text-primary" id="demoNetBalance">₹1,24,500</span>
+                            <span class="stat-meta text-income" id="demoBalanceTrend"><i class="fa-solid fa-arrow-trend-up"></i> +14% this month</span>
+                        </div>
+                        <div class="preview-stat-card">
+                            <span class="stat-label">Total Income</span>
+                            <span class="stat-val text-income" id="demoIncome">₹85,000</span>
+                            <span class="stat-meta" id="demoIncomeMeta">2 Earnings</span>
+                        </div>
+                        <div class="preview-stat-card">
+                            <span class="stat-label">Expenses</span>
+                            <span class="stat-val text-expense" id="demoExpenses">₹32,450</span>
+                            <span class="stat-meta text-income" id="demoExpenseMeta">Under budget</span>
+                        </div>
+                        <div class="preview-stat-card">
+                            <span class="stat-label">Savings Rate</span>
+                            <span class="stat-val text-warning" id="demoSavingsRate">62%</span>
+                            <span class="stat-meta text-income" id="demoSavingsMeta">Target: &gt;20%</span>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Interactive Transaction Table Container -->
+                    <div class="demo-data-panel" id="demoTablePanel">
+                        <div class="preview-table-card">
+                            <div class="preview-table-head">
+                                <span>Date</span>
+                                <span>Description</span>
+                                <span>Category</span>
+                                <span class="preview-tx-amount">Amount</span>
+                            </div>
+                            <div class="preview-table-body" id="demoTransactionList">
+                                <!-- Populated dynamically by script -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic AI Advisor Interactive Panel -->
+                    <div class="demo-ai-panel d-none" id="demoAiPanel">
+                        <div class="demo-ai-header">
+                            <div class="ai-avatar-mini"><i class="fa-solid fa-robot"></i></div>
+                            <div>
+                                <strong>Gemini 3.5 Flash AI Financial Advisor</strong>
+                                <span class="demo-ai-status"><i class="fa-solid fa-circle-check text-income"></i> Live Context Grounded</span>
+                            </div>
+                        </div>
+
+                        <!-- Clickable AI prompt suggestion chips -->
+                        <div class="demo-ai-chips">
+                            <button type="button" class="demo-chip active" data-prompt="save">
+                                <i class="fa-solid fa-piggy-bank"></i> How to save ₹10k extra?
+                            </button>
+                            <button type="button" class="demo-chip" data-prompt="categories">
+                                <i class="fa-solid fa-chart-pie"></i> Spending Breakdown
+                            </button>
+                            <button type="button" class="demo-chip" data-prompt="goal">
+                                <i class="fa-solid fa-bullseye"></i> Goal Milestone Forecast
+                            </button>
+                        </div>
+
+                        <div class="preview-ai-bubble">
+                            <div class="ai-bubble-text" id="demoAiResponse">
+                                <strong>Fintrack AI:</strong> "Based on October 2026 data, your discretionary spending in <strong>Food & Dining (₹3,450)</strong> and <strong>Bills (₹1,299)</strong> leaves a healthy savings margin of ₹52,550. Reducing dining out by just twice a week adds an extra ₹5,000 toward your Emergency Fund!"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Core Features Section (1 Way for Each Feature) -->
+        <section class="landing-section" id="features">
+            <div class="section-badge">Core Capabilities</div>
+            <h2 class="section-heading">Everything in One Cohesive Platform</h2>
+            <p class="section-lead">A unified system combining fast logging, automated document reconciliation, and proactive AI financial planning.</p>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon feature-icon-primary">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                    </div>
+                    <h3>Smart Statement Import</h3>
+                    <p>Upload PDF, Excel, CSV, or Image bank statements. AI parses transactions and enforces decimal-safe balance reconciliation.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon feature-icon-income">
+                        <i class="fa-solid fa-list-check"></i>
+                    </div>
+                    <h3>Cash Flow & Receipts</h3>
+                    <p>Log transactions with payment modes (UPI, Cards, Cash). Attach bill photos via Cloudinary CDN with 1-click Undo.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon feature-icon-warning">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <h3>Category Budgets & Goals</h3>
+                    <p>Set spending caps per category and track savings goals with real-time progress bars and milestone forecasts.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon feature-icon-primary">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <h3>Gemini 3.5 Flash AI Advisor</h3>
+                    <p>Chat with your financial intelligence advisor. Grounded on your active spending data with volatile in-RAM key security.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon feature-icon-income">
+                        <i class="fa-solid fa-database"></i>
+                    </div>
+                    <h3>Data Portability & Backups</h3>
+                    <p>Export records to Excel CSV, download complete JSON backups, or restore your database anytime directly from the sidebar.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Landing Footer -->
+    <footer class="landing-footer">
+        <div class="landing-footer-inner">
+            <div class="footer-brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+                <span class="brand-name">Fintrack</span>
+            </div>
+            <p class="footer-copy">
+                Fintrack Financial Intelligence Platform &copy; 2026. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Interactive Dynamic Demo Script -->
+    <script>
+        (function() {
+            // Check active session: if logged in, show 'Open Dashboard' in top right
+            try {
+                const token = localStorage.getItem('fintrack_token') || sessionStorage.getItem('fintrack_token');
+                const user = JSON.parse(localStorage.getItem('fintrack_user') || '{}');
+                const actions = document.getElementById('landingNavActions');
+                if (token && actions) {
+                    actions.innerHTML = `
+                        <a href="dashboard.html" class="btn btn-primary btn-sm">
+                            <i class="fa-solid fa-gauge"></i> Open Dashboard ${user.name ? `(${user.name})` : ''}
+                        </a>
+                    `;
+                }
+            } catch(e) {}
+
+            // Dynamic Sample Data Across Months
+            const demoData = {
+                'October 2026': {
+                    net: '₹1,24,500',
+                    trend: '<i class="fa-solid fa-arrow-trend-up"></i> +14% this month',
+                    income: '₹85,000',
+                    incomeMeta: '2 Earnings',
+                    expenses: '₹32,450',
+                    expenseMeta: 'Under budget',
+                    savings: '62%',
+                    savingsMeta: 'Target: >20%',
+                    transactions: [
+                        { date: 'Oct 24', desc: 'Tech Consulting Services', cat: 'Salary / Income', badge: 'badge-income', amt: '+₹65,000', type: 'income' },
+                        { date: 'Oct 22', desc: "Nature's Basket Groceries", cat: 'Food & Dining', badge: 'badge-food', amt: '-₹3,450', type: 'expense' },
+                        { date: 'Oct 20', desc: 'High-Speed Fiber Internet', cat: 'Bills & Utilities', badge: 'badge-bill', amt: '-₹1,299', type: 'expense' },
+                        { date: 'Oct 15', desc: 'Client Retainer Payment', cat: 'Freelance', badge: 'badge-income', amt: '+₹20,000', type: 'income' },
+                        { date: 'Oct 12', desc: 'Uber Corporate Commute', cat: 'Transportation', badge: 'badge-transport', amt: '-₹680', type: 'expense' }
+                    ]
+                },
+                'September 2026': {
+                    net: '₹1,06,979',
+                    trend: '<i class="fa-solid fa-arrow-trend-up"></i> +9% this month',
+                    income: '₹78,000',
+                    incomeMeta: '2 Earnings',
+                    expenses: '₹41,200',
+                    expenseMeta: 'Within limits',
+                    savings: '47%',
+                    savingsMeta: 'Target: >20%',
+                    transactions: [
+                        { date: 'Sep 28', desc: 'Monthly Salary Credit', cat: 'Salary / Income', badge: 'badge-income', amt: '+₹65,000', type: 'income' },
+                        { date: 'Sep 24', desc: 'IKEA Home Furnishings', cat: 'Housing & Decor', badge: 'badge-food', amt: '-₹12,400', type: 'expense' },
+                        { date: 'Sep 18', desc: 'Quarterly Dividend Yield', cat: 'Investments', badge: 'badge-income', amt: '+₹13,000', type: 'income' },
+                        { date: 'Sep 15', desc: 'Reliance Digital Gadgets', cat: 'Shopping', badge: 'badge-bill', amt: '-₹8,900', type: 'expense' },
+                        { date: 'Sep 04', desc: 'Amazon Prime Annual', cat: 'Bills & Utilities', badge: 'badge-bill', amt: '-₹1,499', type: 'expense' }
+                    ]
+                },
+                'November 2026': {
+                    net: '₹1,56,800',
+                    trend: '<i class="fa-solid fa-arrow-trend-up"></i> +26% this month',
+                    income: '₹95,000',
+                    incomeMeta: '3 Earnings',
+                    expenses: '₹28,100',
+                    expenseMeta: 'Optimal spending',
+                    savings: '70%',
+                    savingsMeta: 'Exceptional',
+                    transactions: [
+                        { date: 'Nov 05', desc: 'Senior Consulting Contract', cat: 'Salary / Income', badge: 'badge-income', amt: '+₹75,000', type: 'income' },
+                        { date: 'Nov 04', desc: 'Whole Foods Market', cat: 'Food & Dining', badge: 'badge-food', amt: '-₹2,100', type: 'expense' },
+                        { date: 'Nov 03', desc: 'Cloud Server Hosting', cat: 'Bills & Utilities', badge: 'badge-bill', amt: '-₹1,850', type: 'expense' },
+                        { date: 'Nov 02', desc: 'Stock Dividends Payout', cat: 'Investments', badge: 'badge-income', amt: '+₹20,000', type: 'income' },
+                        { date: 'Nov 01', desc: 'Metro Transit Pass', cat: 'Transportation', badge: 'badge-transport', amt: '-₹1,200', type: 'expense' }
+                    ]
+                }
+            };
+
+            const months = ['September 2026', 'October 2026', 'November 2026'];
+            let currentMonthIdx = 1; // October 2026
+            let activeTab = 'all';
+
+            const demoMonthText = document.getElementById('demoMonthText');
+            const demoNetBalance = document.getElementById('demoNetBalance');
+            const demoBalanceTrend = document.getElementById('demoBalanceTrend');
+            const demoIncome = document.getElementById('demoIncome');
+            const demoIncomeMeta = document.getElementById('demoIncomeMeta');
+            const demoExpenses = document.getElementById('demoExpenses');
+            const demoExpenseMeta = document.getElementById('demoExpenseMeta');
+            const demoSavingsRate = document.getElementById('demoSavingsRate');
+            const demoSavingsMeta = document.getElementById('demoSavingsMeta');
+            const demoTransactionList = document.getElementById('demoTransactionList');
+            const demoTablePanel = document.getElementById('demoTablePanel');
+            const demoAiPanel = document.getElementById('demoAiPanel');
+
+            const badgeAll = document.getElementById('badgeAll');
+            const badgeIncome = document.getElementById('badgeIncome');
+            const badgeExpense = document.getElementById('badgeExpense');
+
+            function renderDemo() {
+                const monthName = months[currentMonthIdx];
+                const data = demoData[monthName];
+                if (!data) return;
+
+                demoMonthText.textContent = monthName;
+                demoNetBalance.textContent = data.net;
+                demoBalanceTrend.innerHTML = data.trend;
+                demoIncome.textContent = data.income;
+                demoIncomeMeta.textContent = data.incomeMeta;
+                demoExpenses.textContent = data.expenses;
+                demoExpenseMeta.textContent = data.expenseMeta;
+                demoSavingsRate.textContent = data.savings;
+                demoSavingsMeta.textContent = data.savingsMeta;
+
+                // Update tab badges
+                const incomeCount = data.transactions.filter(t => t.type === 'income').length;
+                const expenseCount = data.transactions.filter(t => t.type === 'expense').length;
+                badgeAll.textContent = data.transactions.length;
+                badgeIncome.textContent = incomeCount;
+                badgeExpense.textContent = expenseCount;
+
+                // Render table
+                if (activeTab === 'ai') {
+                    demoTablePanel.classList.add('d-none');
+                    demoAiPanel.classList.remove('d-none');
+                } else {
+                    demoAiPanel.classList.add('d-none');
+                    demoTablePanel.classList.remove('d-none');
+
+                    const filtered = data.transactions.filter(t => {
+                        if (activeTab === 'income') return t.type === 'income';
+                        if (activeTab === 'expense') return t.type === 'expense';
+                        return true;
+                    });
+
+                    demoTransactionList.innerHTML = filtered.map(t => `
+                        <div class="preview-table-row">
+                            <span class="text-muted">${t.date}</span>
+                            <strong>${t.desc}</strong>
+                            <span><span class="preview-tx-badge ${t.badge}">${t.cat}</span></span>
+                            <span class="preview-tx-amount ${t.type === 'income' ? 'text-income' : 'text-expense'}">${t.amt}</span>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            // Month navigation buttons
+            document.getElementById('demoPrevMonthBtn')?.addEventListener('click', () => {
+                if (currentMonthIdx > 0) {
+                    currentMonthIdx--;
+                    renderDemo();
+                }
+            });
+
+            document.getElementById('demoNextMonthBtn')?.addEventListener('click', () => {
+                if (currentMonthIdx < months.length - 1) {
+                    currentMonthIdx++;
+                    renderDemo();
+                }
+            });
+
+            // Tabs switching
+            document.querySelectorAll('.demo-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.demo-tab').forEach(t => {
+                        t.classList.remove('active');
+                        t.setAttribute('aria-selected', 'false');
+                    });
+                    tab.classList.add('active');
+                    tab.setAttribute('aria-selected', 'true');
+                    activeTab = tab.getAttribute('data-tab');
+                    renderDemo();
+                });
+            });
+
+            // AI Suggestion Chips
+            const aiResponses = {
+                save: '<strong>Fintrack AI:</strong> "Based on this period, your highest discretionary spending was in Food & Dining and Bills. Reducing non-essential dining by twice a week frees up an extra ₹5,000/mo directly toward your Emergency Fund!"',
+                categories: '<strong>Fintrack AI:</strong> "Category Breakdown: Food accounts for 42% of spending, Utilities represent 28%, and Transportation makes up 18%. Your essential spending is well-aligned under your target monthly limits."',
+                goal: '<strong>Fintrack AI:</strong> "At your current savings rate of ₹52,550/mo, you are on track to achieve your Emergency Fund Target 2 months ahead of your projected deadline!"'
+            };
+
+            document.querySelectorAll('.demo-chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    document.querySelectorAll('.demo-chip').forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    const key = chip.getAttribute('data-prompt');
+                    const respBox = document.getElementById('demoAiResponse');
+                    if (respBox && aiResponses[key]) {
+                        respBox.innerHTML = aiResponses[key];
+                    }
+                });
+            });
+
+            // Initial render
+            renderDemo();
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1323 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Fintrack Smart Expense Tracker</title>
+    <meta name="description" content="Manage your personal finances, track daily expenses, and achieve savings goals with Fintrack." />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap">
+    <!-- FontAwesome 6 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="app-body">
+    <div class="ambient-glow ambient-glow-1"></div>
+    <div class="ambient-glow ambient-glow-2"></div>
+
+    <!-- Mobile Sidebar Backdrop Overlay -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <div class="app-container">
+        <!-- ==================================================================
+             DYNAMIC SIDEBAR
+             ================================================================== -->
+        <aside class="app-sidebar" id="appSidebar">
+            <!-- Sidebar Header / Brand -->
+            <div class="sidebar-brand-wrapper">
+                <a href="dashboard.html" class="sidebar-brand">
+                    <div class="brand-icon">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+                    <span class="brand-name">Fintrack</span>
+                    <span class="brand-tag">PRO</span>
+                </a>
+                <button type="button" class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close Sidebar" title="Close Sidebar">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="sidebar-nav">
+                <button type="button" class="nav-item active" data-view="overview">
+                    <i class="fa-solid fa-chart-line nav-icon"></i>
+                    <span>Dashboard</span>
+                </button>
+
+                <button type="button" class="nav-item" data-view="transactions">
+                    <i class="fa-solid fa-receipt nav-icon"></i>
+                    <span>Transactions</span>
+                </button>
+
+                <button type="button" class="nav-item" data-view="statement-import">
+                    <i class="fa-solid fa-file-invoice-dollar nav-icon"></i>
+                    <span>Smart Statement Import</span>
+                </button>
+
+                <button type="button" class="nav-item" data-view="budgets">
+                    <i class="fa-solid fa-bullseye nav-icon"></i>
+                    <span>Budgets & Goals</span>
+                </button>
+
+                <button type="button" class="nav-item" data-view="ai-advisor">
+                    <i class="fa-solid fa-robot nav-icon"></i>
+                    <span>AI Advisor</span>
+                </button>
+
+                <button type="button" class="nav-item" data-view="backup">
+                    <i class="fa-solid fa-database nav-icon"></i>
+                    <span>Data & Backup</span>
+                </button>
+
+                <button type="button" class="nav-item" data-view="settings">
+                    <i class="fa-solid fa-sliders nav-icon"></i>
+                    <span>Settings & Profile</span>
+                </button>
+            </nav>
+
+            <!-- Sidebar Footer: User Account Tile & Sign Out Sibling -->
+            <div class="sidebar-footer">
+                <div class="sidebar-user-tile">
+                    <button type="button" class="sidebar-user-btn" id="sidebarUserCard" title="Open Settings & Profile" aria-label="Open Settings & Profile">
+                        <div class="sidebar-user-avatar" id="sidebarUserAvatar">
+                            <span id="sidebarAvatarText">U</span>
+                            <img id="sidebarAvatarImg" src="" alt="Profile" class="avatar-photo d-none" />
+                        </div>
+                        <div class="sidebar-user-meta">
+                            <div class="sidebar-user-name" id="sidebarUserName">User</div>
+                            <div class="sidebar-user-email" id="sidebarUserEmail">user@example.com</div>
+                        </div>
+                    </button>
+                    <button type="button" class="sidebar-logout-btn" id="sidebarLogoutBtn" onclick="logout()" title="Sign Out" aria-label="Sign Out">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ==================================================================
+             MAIN APPLICATION VIEW CONTAINER
+             ================================================================== -->
+        <div class="app-main">
+            <!-- App Top Header: Current Location & Status Only -->
+            <header class="app-topbar">
+                <div class="topbar-left">
+                    <button type="button" class="topbar-menu-btn" id="sidebarToggleBtn" aria-label="Toggle Sidebar Menu" title="Toggle Navigation Menu">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div class="topbar-location">
+                        <nav class="topbar-breadcrumb" aria-label="Breadcrumb">
+                            <span class="breadcrumb-item"><i class="fa-solid fa-wallet"></i> Fintrack</span>
+                            <span class="breadcrumb-sep"><i class="fa-solid fa-chevron-right"></i></span>
+                            <span class="breadcrumb-item active" id="activeViewBreadcrumb">Dashboard</span>
+                        </nav>
+                        <h2 class="topbar-view-title" id="activeViewTitle">Financial Overview</h2>
+                    </div>
+                </div>
+            </header>
+
+            <!-- ==============================================================
+                 VIEW 1: OVERVIEW / DASHBOARD
+                 ============================================================== -->
+            <section class="view-panel active" id="view-overview">
+                <!-- Welcome Hero Bar -->
+                <div class="welcome-hero">
+                    <div class="welcome-title">
+                        <h1>Welcome back, <span id="heroUserName">User</span> 👋</h1>
+                        <p id="currentDateSubtext">Real-time cash flow and account overview.</p>
+                    </div>
+
+                    <div class="hero-actions">
+                        <button type="button" class="btn btn-primary" id="openAddTransactionBtn">
+                            <i class="fa-solid fa-plus"></i> Add Transaction
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dashboard Month & Period Navigation Bar -->
+                <div class="dashboard-period-bar">
+                    <div class="period-controls-wrapper">
+                        <div class="period-nav-group">
+                            <button type="button" class="btn btn-outline btn-xs period-nav-btn" id="prevMonthBtn" title="Previous Month" aria-label="Previous Month">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </button>
+                            <div class="period-select-box">
+                                <i class="fa-regular fa-calendar-days text-primary"></i>
+                                <select id="dashboardPeriodSelect" class="period-select-input" title="Select Financial Month" aria-label="Select Financial Month">
+                                    <!-- Populated dynamically via JS -->
+                                </select>
+                            </div>
+                            <button type="button" class="btn btn-outline btn-xs period-nav-btn" id="nextMonthBtn" title="Next Month" aria-label="Next Month">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        <button type="button" class="btn btn-outline btn-xs jump-today-btn d-none" id="jumpCurrentMonthBtn" title="Jump to Current Calendar Month">
+                            <i class="fa-solid fa-rotate-left"></i> Current Month
+                        </button>
+                    </div>
+                    <div class="period-badge-wrapper">
+                        <span class="period-status-pill" id="dashboardPeriodPill">
+                            <span class="period-pill-dot"></span>
+                            <span id="periodPillText">Current Month</span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- KPI Grid -->
+                <div class="kpi-grid">
+                    <div class="kpi-card kpi-balance">
+                        <div class="kpi-header">
+                            <span class="kpi-label">Total Balance</span>
+                            <div class="kpi-icon">
+                                <i class="fa-solid fa-scale-balanced"></i>
+                            </div>
+                        </div>
+                        <div class="kpi-value" id="kpiBalance">₹0</div>
+                        <div class="kpi-footer">
+                            <span class="kpi-badge badge-primary" id="kpiBalanceStatus">Healthy</span>
+                            <span id="kpiBalanceSubtext">Cumulative net cash</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card kpi-income">
+                        <div class="kpi-header">
+                            <span class="kpi-label" id="kpiIncomeLabel">Monthly Income</span>
+                            <div class="kpi-icon">
+                                <i class="fa-solid fa-arrow-trend-up"></i>
+                            </div>
+                        </div>
+                        <div class="kpi-value" id="kpiIncome">₹0</div>
+                        <div class="kpi-footer">
+                            <span class="kpi-badge badge-income" id="kpiIncomeCount">0 credits</span>
+                            <span id="kpiIncomeSubtext">This month</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card kpi-expense">
+                        <div class="kpi-header">
+                            <span class="kpi-label" id="kpiExpenseLabel">Monthly Expenses</span>
+                            <div class="kpi-icon">
+                                <i class="fa-solid fa-arrow-trend-down"></i>
+                            </div>
+                        </div>
+                        <div class="kpi-value" id="kpiExpense">₹0</div>
+                        <div class="kpi-footer">
+                            <span class="kpi-badge badge-expense" id="kpiTopExpenseCategory">No expenses</span>
+                            <span id="kpiExpenseSubtext">This month</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card kpi-savings">
+                        <div class="kpi-header">
+                            <span class="kpi-label" id="kpiSavingsLabel">Savings Rate</span>
+                            <div class="kpi-icon">
+                                <i class="fa-solid fa-piggy-bank"></i>
+                            </div>
+                        </div>
+                        <div class="kpi-value" id="kpiSavingsRate">0%</div>
+                        <div class="kpi-footer">
+                            <span class="kpi-badge badge-primary" id="kpiSavingsAdvice">Target > 20%</span>
+                            <span id="kpiSavingsSubtext">Saved from income</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Grid -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-chart-column text-primary"></i> Cash Flow Analysis</h3>
+                            <span class="card-subtitle">Income vs Expense Trends</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="cashflowChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-chart-pie text-expense"></i> Expense Breakdown</h3>
+                            <span class="card-subtitle">By Category</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Budgets & Savings Goals Grid Preview -->
+                <div class="goals-budget-grid">
+                    <div class="chart-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-gauge-high text-warning"></i> Monthly Category Budgets</h3>
+                            <button type="button" class="btn btn-outline btn-sm" id="editBudgetsQuickBtn">
+                                <i class="fa-solid fa-pen-to-square"></i> Set Limits
+                            </button>
+                        </div>
+                        <div id="budgetProgressList">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-bullseye text-income"></i> Savings Goals</h3>
+                            <button type="button" class="btn btn-outline btn-sm" id="addGoalQuickBtn">
+                                <i class="fa-solid fa-plus"></i> New Goal
+                            </button>
+                        </div>
+                        <div id="savingsGoalsList">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 VIEW 2: TRANSACTIONS & RECEIPTS
+                 ============================================================== -->
+            <section class="view-panel" id="view-transactions">
+                <div class="transactions-card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-list-check text-primary"></i> Transaction Records</h3>
+                        <div class="card-header-actions">
+                            <button type="button" class="btn btn-primary btn-sm" id="addTxFromTableViewBtn">
+                                <i class="fa-solid fa-plus"></i> Add Entry
+                            </button>
+                            <button type="button" class="btn btn-danger-outline btn-sm" id="clearAllBtn">
+                                <i class="fa-solid fa-trash-can"></i> Clear All
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filter Toolbar -->
+                    <div class="toolbar">
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="searchInput" placeholder="Search by title, category, or note..." aria-label="Search transactions" />
+                        </div>
+
+                        <div class="filter-controls">
+                            <select id="typeFilter" title="Filter by Type" aria-label="Filter by Type">
+                                <option value="all">All Types</option>
+                                <option value="expense">Expenses Only</option>
+                                <option value="income">Income Only</option>
+                            </select>
+
+                            <select id="categoryFilter" title="Filter by Category" aria-label="Filter by Category">
+                                <option value="all">All Categories</option>
+                            </select>
+
+                            <select id="dateFilter" title="Filter by Date Range" aria-label="Filter by Date Range">
+                                <option value="all">All Time</option>
+                                <option value="this_month">This Month</option>
+                                <option value="last_month">Last Month</option>
+                                <option value="this_week">This Week</option>
+                                <option value="today">Today</option>
+                            </select>
+
+                            <select id="sortFilter" title="Sort Transactions" aria-label="Sort Transactions">
+                                <option value="date_desc">Date: Newest First</option>
+                                <option value="date_asc">Date: Oldest First</option>
+                                <option value="amount_desc">Amount: Highest First</option>
+                                <option value="amount_asc">Amount: Lowest First</option>
+                                <option value="title_asc">Title: A to Z</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Transaction Table -->
+                    <div class="transaction-list-wrapper">
+                        <table class="transaction-table">
+                            <thead>
+                                <tr>
+                                    <th>Transaction</th>
+                                    <th>Date</th>
+                                    <th>Payment Method</th>
+                                    <th class="text-right">Amount</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionTableBody">
+                                <!-- Populated dynamically via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div class="empty-state" id="emptyState">
+                        <i class="fa-regular fa-folder-open"></i>
+                        <h4>No transactions found</h4>
+                        <p>Try adjusting your search filters or click "Add Transaction" to create one.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 VIEW: SMART STATEMENT IMPORT & RECONCILIATION
+                 ============================================================== -->
+            <section class="view-panel" id="view-statement-import">
+                <!-- View Header & Subtabs -->
+                <div class="stmt-header-card">
+                    <div class="stmt-header-titles">
+                        <div class="stmt-title-row">
+                            <div class="brand-icon stmt-hero-icon">
+                                <i class="fa-solid fa-file-invoice-dollar"></i>
+                            </div>
+                            <div>
+                                <h2>Statement Import & Reconciliation</h2>
+                                <p class="card-subtitle">Upload your bank or card statement to import transactions and reconcile your account balance.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stmt-tab-nav">
+                        <button type="button" class="stmt-tab-btn active" id="stmtTabImportBtn">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Import Statement
+                        </button>
+                        <button type="button" class="stmt-tab-btn" id="stmtTabHistoryBtn">
+                            <i class="fa-solid fa-clock-rotate-left"></i> Import History
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SUB-PANEL 1: ACTIVE IMPORT WORKFLOW -->
+                <div id="statementImportWorkflowPanel" class="stmt-workflow-container">
+                    <!-- Step 1: Upload Card -->
+                    <div class="chart-card stmt-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-file-arrow-up text-primary"></i> Upload Statement</h3>
+                            <span class="card-subtitle">Supports PDF, Excel (.xlsx, .xls), CSV, or Images (up to 10 MB)</span>
+                        </div>
+
+                        <div class="statement-upload-zone" id="statementDropZone">
+                            <input type="file" id="statementFileInput" accept=".pdf,.xlsx,.xls,.csv,image/png,image/jpeg,image/webp" class="d-none" aria-label="Upload financial statement" />
+                            <div class="upload-icon-circle">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                            </div>
+                            <h4>Drop your statement here or click to browse</h4>
+                            <p class="upload-subtext">PDF bank statements, spreadsheets, or transaction photos</p>
+                            <button type="button" class="btn btn-primary btn-sm" id="statementBrowseBtn">
+                                <i class="fa-solid fa-folder-open"></i> Browse Files
+                            </button>
+                        </div>
+
+                        <!-- Selected File Preview -->
+                        <div class="statement-file-preview-card d-none" id="statementFilePreviewCard">
+                            <div class="stmt-file-info">
+                                <i class="fa-solid fa-file-lines statement-preview-icon" id="statementFileIcon"></i>
+                                <div class="stmt-file-meta">
+                                    <h4 id="statementFileName">statement.pdf</h4>
+                                    <span id="statementFileSize" class="text-muted text-xs">0 KB</span>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-outline btn-sm" id="statementRemoveFileBtn" title="Remove selected file">
+                                <i class="fa-solid fa-xmark"></i> Change File
+                            </button>
+                        </div>
+
+                        <!-- Optional Custom Date Range & Action -->
+                        <div class="stmt-date-override-row">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="stmtCustomStartDate">Start Date (Optional)</label>
+                                    <input type="date" id="stmtCustomStartDate" class="form-control" title="Auto-detected if left empty" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="stmtCustomEndDate">End Date (Optional)</label>
+                                    <input type="date" id="stmtCustomEndDate" class="form-control" title="Auto-detected if left empty" />
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-primary btn-lg btn-full" id="startAnalyzeStatementBtn" disabled>
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Extract & Reconcile Statement
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Processing Status Box -->
+                    <div class="chart-card stmt-card d-none" id="statementProcessingCard">
+                        <div class="stmt-processing-container">
+                            <div class="stmt-processing-spinner">
+                                <i class="fa-solid fa-circle-notch fa-spin"></i>
+                            </div>
+                            <div class="stmt-processing-content">
+                                <h4 id="statementProcessingTitle">Extracting Statement Data...</h4>
+                                <p id="statementProcessingDesc" class="text-muted text-xs">AI is reading transactions and checking balances...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Statement KPI Summary & Reconciliation Card -->
+                    <div class="chart-card stmt-card d-none" id="statementSummaryCard">
+                        <div class="card-header">
+                            <div>
+                                <h3><i class="fa-solid fa-scale-balanced text-primary"></i> Statement Summary</h3>
+                                <p class="card-subtitle"><span id="summaryAccountName">Primary Account</span> &bull; <span id="summaryDateRange">N/A</span></p>
+                            </div>
+                            <div id="summaryReconcileBadge" class="status-badge status-reconciled">
+                                <i class="fa-solid fa-circle-check"></i> Reconciled
+                            </div>
+                        </div>
+
+                        <div class="stmt-summary-grid">
+                            <div class="stmt-kpi-card">
+                                <span class="stmt-kpi-label">Opening Balance</span>
+                                <span class="stmt-kpi-value" id="summaryOpeningBalance">₹0.00</span>
+                                <span class="stmt-kpi-sub">Period start</span>
+                            </div>
+                            <div class="stmt-kpi-card">
+                                <span class="stmt-kpi-label">Total Income (+)</span>
+                                <span class="stmt-kpi-value text-income" id="summaryTotalCredits">₹0.00</span>
+                                <span class="stmt-kpi-sub" id="summaryCreditsCount">0 credits</span>
+                            </div>
+                            <div class="stmt-kpi-card">
+                                <span class="stmt-kpi-label">Total Expenses (-)</span>
+                                <span class="stmt-kpi-value text-expense" id="summaryTotalDebits">₹0.00</span>
+                                <span class="stmt-kpi-sub" id="summaryDebitsCount">0 debits</span>
+                            </div>
+                            <div class="stmt-kpi-card">
+                                <span class="stmt-kpi-label">Expected Closing</span>
+                                <span class="stmt-kpi-value text-primary" id="summaryCalculatedClosing">₹0.00</span>
+                                <span class="stmt-kpi-sub">Stated: <span id="summaryClosingBalance">₹0.00</span></span>
+                            </div>
+                            <div class="stmt-kpi-card">
+                                <span class="stmt-kpi-label">Difference</span>
+                                <span class="stmt-kpi-value" id="summaryReconciliationDiff">₹0.00</span>
+                                <span class="stmt-kpi-sub">Calculated vs Stated</span>
+                            </div>
+                        </div>
+
+                        <!-- Diagnostics Alerts Box -->
+                        <div class="stmt-diagnostics-box d-none" id="summaryDiagnosticsBox">
+                            <div class="diagnostics-header">
+                                <i class="fa-solid fa-triangle-exclamation text-warning"></i>
+                                <strong>Notes & Discrepancies</strong>
+                            </div>
+                            <ul class="diagnostics-list" id="summaryDiagnosticsList"></ul>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Transaction Preview & Edit Table Card -->
+                    <div class="chart-card stmt-card d-none" id="statementPreviewCard">
+                        <div class="card-header">
+                            <div>
+                                <h3><i class="fa-solid fa-list-check text-primary"></i> Review & Edit Transactions</h3>
+                                <p class="card-subtitle">Review or adjust details before importing. Edits update the balance summary in real time.</p>
+                            </div>
+                            <span class="badge-primary stmt-counter-badge" id="stmtSelectedCounter">0 of 0 selected</span>
+                        </div>
+
+                        <!-- Preview Toolbar -->
+                        <div class="stmt-preview-toolbar">
+                            <div class="stmt-filter-group">
+                                <div class="input-with-icon">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    <input type="text" id="stmtSearchInput" placeholder="Search description or amount..." title="Filter descriptions or amounts" aria-label="Filter descriptions or amounts" />
+                                </div>
+                                <select id="stmtTypeFilter" class="form-control form-control-sm" title="Filter by Transaction Type" aria-label="Filter by Transaction Type">
+                                    <option value="all">All Types</option>
+                                    <option value="expense">Expenses</option>
+                                    <option value="income">Income</option>
+                                    <option value="transfer">Transfers</option>
+                                    <option value="refund">Refunds</option>
+                                </select>
+                                <select id="stmtDuplicateFilter" class="form-control form-control-sm" title="Filter by Duplicate Status" aria-label="Filter by Duplicate Status">
+                                    <option value="all">All Statuses</option>
+                                    <option value="new">New</option>
+                                    <option value="duplicate_exact">Exact Duplicates</option>
+                                    <option value="duplicate_potential">Potential Duplicates</option>
+                                </select>
+                            </div>
+
+                            <div class="stmt-bulk-actions">
+                                <button type="button" class="btn btn-outline btn-xs" id="stmtSelectAllBtn">
+                                    <i class="fa-solid fa-check-double"></i> Select All
+                                </button>
+                                <button type="button" class="btn btn-outline btn-xs" id="stmtDeselectAllBtn">
+                                    <i class="fa-solid fa-square-xmark"></i> Deselect All
+                                </button>
+                                <button type="button" class="btn btn-outline btn-xs" id="stmtSkipDuplicatesBtn">
+                                    <i class="fa-solid fa-filter"></i> Skip Duplicates
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Table -->
+                        <div class="transaction-list-wrapper stmt-table-wrapper">
+                            <table class="transaction-table stmt-preview-table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center w-50">Import</th>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th>Amount</th>
+                                        <th>Type</th>
+                                        <th>Category</th>
+                                        <th class="text-center">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="statementPreviewTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Confirmation & Synchronization Card -->
+                    <div class="chart-card stmt-card d-none" id="statementConfirmationCard">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-shield-halved text-income"></i> Confirm Import</h3>
+                        </div>
+
+                        <div class="stmt-confirm-grid">
+                            <div class="confirm-metric-tile">
+                                <span class="confirm-metric-label">Total Transactions</span>
+                                <span class="confirm-metric-val" id="confirmTotalCount">0</span>
+                            </div>
+                            <div class="confirm-metric-tile">
+                                <span class="confirm-metric-label">Importing</span>
+                                <span class="confirm-metric-val text-income" id="confirmSelectedCount">0</span>
+                            </div>
+                            <div class="confirm-metric-tile">
+                                <span class="confirm-metric-label">Skipped</span>
+                                <span class="confirm-metric-val text-muted" id="confirmSkippedCount">0</span>
+                            </div>
+                            <div class="confirm-metric-tile">
+                                <span class="confirm-metric-label">Net Balance Impact</span>
+                                <span class="confirm-metric-val" id="confirmBalanceImpact">₹0.00</span>
+                            </div>
+                        </div>
+
+                        <!-- Discrepancy Authorization Notice (Shown only if discrepancy > 0) -->
+                        <div class="discrepancy-auth-box d-none" id="confirmDiscrepancyNotice">
+                            <div class="auth-box-header">
+                                <i class="fa-solid fa-triangle-exclamation text-expense"></i>
+                                <div>
+                                    <strong>Closing Balance Discrepancy Detected</strong>
+                                    <p>The calculated balance differs from your statement's closing balance. Review your items or check below to authorize a balance adjustment entry.</p>
+                                </div>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label class="checkbox-label" for="authorizeAdjustmentCheckbox">
+                                    <input type="checkbox" id="authorizeAdjustmentCheckbox" />
+                                    <span>Authorize a balance adjustment transaction for this difference</span>
+                                </label>
+                            </div>
+                            <div class="form-group mb-0">
+                                <label for="adjustmentReasonInput">Adjustment Note</label>
+                                <input type="text" id="adjustmentReasonInput" class="form-control" placeholder="e.g., Unrecorded bank fees or prior period difference" />
+                            </div>
+                        </div>
+
+                        <div class="stmt-confirm-action-row">
+                            <button type="button" class="btn btn-primary btn-lg" id="stmtConfirmSyncBtn">
+                                <i class="fa-solid fa-check-double"></i> Import Transactions
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB-PANEL 2: STATEMENT IMPORT HISTORY & ROLLBACK -->
+                <div id="statementHistoryPanel" class="stmt-history-container d-none">
+                    <div class="chart-card stmt-card">
+                        <div class="card-header">
+                            <div>
+                                <h3><i class="fa-solid fa-clock-rotate-left text-primary"></i> Statement Import History</h3>
+                                <p class="card-subtitle">View previously imported statements. You can safely rollback any statement without affecting your other transactions.</p>
+                            </div>
+                            <button type="button" class="btn btn-outline btn-sm" id="refreshStatementHistoryBtn">
+                                <i class="fa-solid fa-rotate"></i> Refresh
+                            </button>
+                        </div>
+
+                        <div class="transaction-list-wrapper">
+                            <table class="transaction-table">
+                                <thead>
+                                    <tr>
+                                        <th>Statement Document</th>
+                                        <th>Date Range</th>
+                                        <th>Opening</th>
+                                        <th>Closing</th>
+                                        <th>Imported</th>
+                                        <th>Reconciliation</th>
+                                        <th>Status</th>
+                                        <th class="text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="statementHistoryTableBody">
+                                    <!-- Populated dynamically via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 VIEW 3: BUDGETS & GOALS
+                 ============================================================== -->
+            <section class="view-panel" id="view-budgets">
+                <div class="goals-budget-grid">
+                    <div class="chart-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-sliders text-warning"></i> Monthly Category Budgets</h3>
+                            <button type="button" class="btn btn-primary btn-sm" id="editBudgetsTabBtn">
+                                <i class="fa-solid fa-pen-to-square"></i> Set Limits
+                            </button>
+                        </div>
+                        <p class="card-subtitle">Set monthly caps to receive alerts before overspending.</p>
+                        <div id="budgetProgressListFull" class="budget-full-container">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-bullseye text-income"></i> Savings Goals</h3>
+                            <button type="button" class="btn btn-primary btn-sm" id="addGoalTabBtn">
+                                <i class="fa-solid fa-plus"></i> New Goal
+                            </button>
+                        </div>
+                        <p class="card-subtitle">Build your emergency fund, dream vacation, or asset savings.</p>
+                        <div id="savingsGoalsListFull" class="goals-full-container">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 VIEW 4: AI FINANCIAL ADVISOR (CHATBOT)
+                 ============================================================== -->
+            <section class="view-panel" id="view-ai-advisor">
+                <div class="ai-chat-card">
+                    <div class="ai-chat-topbar">
+                        <div class="ai-chat-title-group">
+                            <div class="ai-chat-avatar">
+                                <i class="fa-solid fa-brain"></i>
+                            </div>
+                            <div>
+                                <h3>Fintrack AI Financial Advisor</h3>
+                                <div class="ai-status-row">
+                                    <span class="ai-status-dot"></span>
+                                    <span id="aiAdvisorStatusText">Grounded on your financial data</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ai-chat-actions">
+                            <button type="button" class="btn btn-outline btn-sm" id="clearChatHistoryBtn" title="Clear Chat History">
+                                <i class="fa-solid fa-rotate-left"></i> Reset Chat
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Chat Message Feed -->
+                    <div class="ai-chat-messages" id="aiChatMessages">
+                        <div class="chat-msg ai">
+                            <div class="msg-avatar"><i class="fa-solid fa-brain"></i></div>
+                            <div class="msg-content">
+                                <p>Hello! I am your <strong>Fintrack AI Financial Advisor</strong>. I have analyzed your transactions, budgets, and savings goals.</p>
+                                <p>Ask me anything about your cashflow, spending habits, or budget optimizations!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Input Form -->
+                    <form id="aiChatForm" class="ai-chat-input-box">
+                        <input type="text" id="aiChatInput" placeholder="Ask about your expenses, budgets, savings goals..." autocomplete="off" required aria-label="Message to AI Advisor" />
+                        <button type="submit" class="btn btn-primary" id="aiSendBtn" aria-label="Send message" title="Send question">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 VIEW 6: DATA PORTABILITY & BACKUP HUB
+                 ============================================================== -->
+            <section class="view-panel" id="view-backup">
+                <div class="backup-container">
+                    <div class="welcome-hero">
+                        <div class="hero-text-group">
+                            <h2><i class="fa-solid fa-database text-primary"></i> Data Portability & Backup Hub</h2>
+                            <p>Export your records for external spreadsheets, download full database backups, or restore previous data.</p>
+                        </div>
+                    </div>
+
+                    <div class="backup-cards-grid">
+                        <!-- Card 1: CSV Export -->
+                        <div class="chart-card backup-action-card">
+                            <div class="backup-card-icon bg-income-light text-income">
+                                <i class="fa-solid fa-file-csv"></i>
+                            </div>
+                            <div class="backup-card-content">
+                                <h3>Export CSV (Excel)</h3>
+                                <p>Download all your transactions as a standard CSV spreadsheet compatible with Excel, Google Sheets, or Apple Numbers.</p>
+                                <button type="button" class="btn btn-outline btn-full" id="backupExportCsvBtn">
+                                    <i class="fa-solid fa-download"></i> Download CSV Spreadsheet
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Full JSON Database Backup -->
+                        <div class="chart-card backup-action-card">
+                            <div class="backup-card-icon bg-primary-light text-primary">
+                                <i class="fa-solid fa-file-code"></i>
+                            </div>
+                            <div class="backup-card-content">
+                                <h3>Download JSON Backup</h3>
+                                <p>Create a complete structured snapshot of your transactions, category budgets, and savings goals for safekeeping.</p>
+                                <button type="button" class="btn btn-outline btn-full" id="backupExportJsonBtn">
+                                    <i class="fa-solid fa-hard-drive"></i> Download JSON Backup File
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Print / PDF Statement -->
+                        <div class="chart-card backup-action-card">
+                            <div class="backup-card-icon bg-warning-light text-warning">
+                                <i class="fa-solid fa-file-pdf"></i>
+                            </div>
+                            <div class="backup-card-content">
+                                <h3>Print Statement / PDF</h3>
+                                <p>Generate a clean, print-ready PDF statement of your financial balance sheet and transaction ledgers.</p>
+                                <button type="button" class="btn btn-outline btn-full" onclick="window.print()">
+                                    <i class="fa-solid fa-print"></i> Print Financial Statement
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Restore Card -->
+                    <div class="chart-card backup-restore-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-cloud-arrow-up text-primary"></i> Restore from JSON Backup</h3>
+                        </div>
+                        <p class="card-subtitle">Upload a previously saved Fintrack JSON backup file to restore your entire database records.</p>
+
+                        <div class="backup-dropzone" id="backupDropzone" onclick="document.getElementById('backupImportJsonInput').click()">
+                            <div class="backup-drop-icon">
+                                <i class="fa-solid fa-folder-open"></i>
+                            </div>
+                            <h4>Click or Drag JSON Backup File Here</h4>
+                            <p class="text-xs text-muted">Supports valid Fintrack .json backup files</p>
+                            <input type="file" id="backupImportJsonInput" accept=".json" class="d-none" title="Restore JSON backup file" aria-label="Restore JSON backup file" />
+                            <button type="button" class="btn btn-primary btn-sm">
+                                <i class="fa-solid fa-upload"></i> Select Backup File
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 VIEW 7: SETTINGS & PROFILE
+                 ============================================================== -->
+            <section class="view-panel" id="view-settings">
+                <div class="settings-grid">
+                    <!-- Card 1: Profile & Preferences -->
+                    <div class="chart-card">
+                        <div class="card-header">
+                            <div>
+                                <h3><i class="fa-solid fa-user-gear text-primary"></i> Profile & Preferences</h3>
+                                <p class="card-subtitle">Manage your personal account details and default currency</p>
+                            </div>
+                        </div>
+
+                        <div class="profile-avatar-row">
+                            <div class="profile-photo-circle" id="profilePhotoCircle">
+                                <span id="profileAvatarInitial">U</span>
+                                <img id="profileAvatarImg" src="" alt="Profile Photo" class="avatar-photo d-none" />
+                            </div>
+
+                            <div class="profile-upload-meta">
+                                <input type="file" id="avatarFileInput" accept="image/jpeg,image/png,image/webp" class="d-none" title="Upload Profile Photo" aria-label="Upload Profile Photo" />
+                                <button type="button" class="btn btn-outline btn-sm" id="triggerAvatarUploadBtn">
+                                    <i class="fa-solid fa-camera"></i> Change Photo
+                                </button>
+                                <span class="card-subtitle">Stored via Cloudinary. PNG, JPG or WEBP.</span>
+                            </div>
+                        </div>
+
+                        <form id="profileForm" class="settings-form">
+                            <div class="form-group">
+                                <label for="profileName">Full Name</label>
+                                <div class="input-with-icon">
+                                    <i class="fa-regular fa-user"></i>
+                                    <input type="text" id="profileName" placeholder="Your name" required />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="profileEmail">Email Address (Account ID)</label>
+                                <div class="input-with-icon">
+                                    <i class="fa-regular fa-envelope"></i>
+                                    <input type="email" id="profileEmail" readonly title="Email cannot be changed" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="profileCurrency">Default Display Currency</label>
+                                <div class="input-with-icon">
+                                    <i class="fa-solid fa-coins"></i>
+                                    <select id="profileCurrency" title="Default Display Currency" aria-label="Default Display Currency">
+                                        <option value="INR">₹ INR (India)</option>
+                                        <option value="USD">$ USD (US)</option>
+                                        <option value="EUR">€ EUR (Europe)</option>
+                                        <option value="GBP">£ GBP (UK)</option>
+                                        <option value="JPY">¥ JPY (Japan)</option>
+                                        <option value="CAD">CA$ CAD (Canada)</option>
+                                        <option value="AUD">A$ AUD (Australia)</option>
+                                        <option value="AED">AED (UAE)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="settings-form-actions">
+                                <button type="submit" class="btn btn-primary btn-sm" id="saveProfileBtn">
+                                    <i class="fa-solid fa-floppy-disk"></i> Save Profile
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Card 2: Gemini AI Configuration (Session BYOK) -->
+                    <div class="chart-card">
+                        <div class="card-header">
+                            <div>
+                                <h3><i class="fa-solid fa-bolt text-warning"></i> Gemini AI Configuration</h3>
+                                <p class="card-subtitle">Session-only: Enter your Google Gemini API key to activate AI features. Held in memory for this active session only.</p>
+                            </div>
+                            <span class="model-badge" id="activeModelBadge">No Key Set</span>
+                        </div>
+
+                        <form id="geminiKeyForm" class="settings-form">
+                            <div class="form-group">
+                                <label for="geminiApiKey">Gemini API Key</label>
+                                <div class="input-with-icon">
+                                    <i class="fa-solid fa-key"></i>
+                                    <input type="password" id="geminiApiKey" placeholder="AIzaSy..." autocomplete="off" title="Gemini API Key" aria-label="Gemini API Key" />
+                                    <i class="fa-regular fa-eye password-toggle"></i>
+                                </div>
+                                <span class="text-xs text-muted">Never stored in database or disk. Cleared on tab reload or logout.</span>
+                            </div>
+
+                            <div class="btn-group-row">
+                                <button type="button" class="btn btn-primary btn-sm" id="saveGeminiKeyBtn">
+                                    <i class="fa-solid fa-flask-vial"></i> Test & Activate Key
+                                </button>
+                                <button type="button" class="btn btn-outline btn-sm" id="clearGeminiKeyBtn">
+                                    <i class="fa-solid fa-xmark"></i> Clear Key
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Live Connection Status Card -->
+                        <div id="geminiModelStatus" class="model-status-card d-none">
+                            <i class="fa-solid fa-circle-check text-income"></i>
+                            <div>
+                                <span class="model-status-label">Active Session Model</span>
+                                <strong class="model-status-val" id="connectedModelName">Gemini Flash Active & Ready</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Security & Password -->
+                    <div class="chart-card">
+                        <div class="card-header">
+                            <div>
+                                <h3><i class="fa-solid fa-lock text-primary"></i> Change Password</h3>
+                                <p class="card-subtitle">Ensure your account is protected with a secure password</p>
+                            </div>
+                        </div>
+
+                        <form id="changePasswordForm" class="settings-form">
+                            <div class="form-group">
+                                <label for="currentPassword">Current Password</label>
+                                <div class="input-with-icon">
+                                    <i class="fa-solid fa-lock"></i>
+                                    <input type="password" id="currentPassword" placeholder="Enter current password" required autocomplete="current-password" />
+                                    <i class="fa-regular fa-eye password-toggle"></i>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="newPassword">New Password</label>
+                                <div class="input-with-icon">
+                                    <i class="fa-solid fa-key"></i>
+                                    <input type="password" id="newPassword" placeholder="Min. 6 characters" minlength="6" required autocomplete="new-password" />
+                                    <i class="fa-regular fa-eye password-toggle"></i>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="confirmNewPassword">Confirm New Password</label>
+                                <div class="input-with-icon">
+                                    <i class="fa-solid fa-check-double"></i>
+                                    <input type="password" id="confirmNewPassword" placeholder="Re-enter new password" minlength="6" required autocomplete="new-password" />
+                                    <i class="fa-regular fa-eye password-toggle"></i>
+                                </div>
+                            </div>
+
+                            <div class="settings-form-actions">
+                                <button type="submit" class="btn btn-primary btn-sm" id="changePasswordBtn">
+                                    <i class="fa-solid fa-shield-halved"></i> Update Password
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Card 4: Danger Zone -->
+                    <div class="chart-card danger-zone-card">
+                        <div class="card-header">
+                            <div>
+                                <h3><i class="fa-solid fa-triangle-exclamation text-expense"></i> Danger Zone</h3>
+                            </div>
+                        </div>
+                        <p class="danger-zone-desc">Permanently delete your account and all associated transactions, budgets, goals, receipts, and AI conversation history.</p>
+                        <div class="danger-zone-action">
+                            <button type="button" class="btn btn-danger btn-sm" id="openDeleteAccountModalBtn">
+                                <i class="fa-solid fa-trash-can"></i> Permanently Delete Account
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- ======================================================================
+         MODALS & DIALOGS
+         ====================================================================== -->
+
+    <!-- Modal: Permanently Delete Account -->
+    <div class="modal-overlay" id="deleteAccountModal">
+        <div class="modal-box modal-box-sm">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-triangle-exclamation text-expense"></i> Delete Account</h3>
+                <button type="button" class="modal-close" data-modal-close aria-label="Close">&times;</button>
+            </div>
+            <form id="deleteAccountForm">
+                <div class="modal-body">
+                    <div class="delete-warning-banner">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <div>
+                            <strong>Warning: This action is permanent!</strong>
+                            <p>All your transactions, budgets, savings goals, receipts, and AI history will be permanently erased. This cannot be undone.</p>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="deleteAccountPassword">Confirm Your Password</label>
+                        <div class="input-with-icon">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" id="deleteAccountPassword" placeholder="Enter password to confirm" required autocomplete="current-password" />
+                            <i class="fa-regular fa-eye password-toggle"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+                    <button type="submit" class="btn btn-danger" id="confirmDeleteAccountBtn">
+                        <i class="fa-solid fa-trash-can"></i> Permanently Delete
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Add / Edit Transaction -->
+    <div class="modal-overlay" id="transactionModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modalTransactionTitle">Add New Transaction</h3>
+                <button type="button" class="modal-close" data-modal-close aria-label="Close">&times;</button>
+            </div>
+            <form id="transactionForm">
+                <input type="hidden" id="txEditId" value="" />
+                <div class="modal-body">
+                    <!-- Type Toggle -->
+                    <div class="type-toggle-group">
+                        <button type="button" class="type-toggle-btn active expense" id="typeExpenseBtn" data-type="expense">
+                            <i class="fa-solid fa-arrow-trend-down"></i> Expense
+                        </button>
+                        <button type="button" class="type-toggle-btn income" id="typeIncomeBtn" data-type="income">
+                            <i class="fa-solid fa-arrow-trend-up"></i> Income
+                        </button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txTitle">Title / Description *</label>
+                        <div class="input-with-icon">
+                            <i class="fa-solid fa-heading"></i>
+                            <input type="text" id="txTitle" placeholder="e.g. Grocery shopping, Freelance design" required />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="txAmount">Amount *</label>
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-coins"></i>
+                                <input type="number" id="txAmount" placeholder="0.00" min="0.01" step="any" required />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txCategory">Category *</label>
+                            <select id="txCategory" title="Transaction Category" aria-label="Transaction Category" required>
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="txDate">Date *</label>
+                            <input type="date" id="txDate" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txPaymentMethod">Payment Mode</label>
+                            <select id="txPaymentMethod" title="Payment Mode" aria-label="Payment Mode">
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txNotes">Optional Notes / Tag</label>
+                        <textarea id="txNotes" rows="2" placeholder="Add extra context or receipt details..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txReceipt">Receipt / Invoice (Cloudinary)</label>
+                        <div class="receipt-upload-box">
+                            <input type="file" id="txReceipt" accept="image/jpeg,image/png,image/webp,application/pdf" title="Attach Receipt or Invoice" aria-label="Attach Receipt or Invoice" />
+                            <input type="hidden" id="txReceiptUrl" value="" />
+                            <input type="hidden" id="txReceiptPublicId" value="" />
+                            <div id="receiptPreviewBox" class="receipt-preview-box d-none">
+                                <div class="receipt-file-badge">
+                                    <i class="fa-solid fa-paperclip"></i>
+                                    <span id="receiptPreviewName">receipt.jpg</span>
+                                </div>
+                                <button type="button" class="action-btn delete" id="clearReceiptBtn" title="Remove Receipt">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="saveTxBtn">
+                        <i class="fa-solid fa-check"></i> Save Transaction
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Manage Budgets -->
+    <div class="modal-overlay" id="budgetModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Monthly Category Budgets</h3>
+                <button type="button" class="modal-close" data-modal-close aria-label="Close">&times;</button>
+            </div>
+            <form id="budgetForm">
+                <div class="modal-body" id="budgetInputsContainer">
+                    <p class="modal-desc">
+                        Set maximum monthly spending limits per category to receive automatic alerts.
+                    </p>
+                    <!-- Populated dynamically via JS -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-floppy-disk"></i> Save Budgets
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: New Savings Goal -->
+    <div class="modal-overlay" id="goalModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Create Savings Goal</h3>
+                <button type="button" class="modal-close" data-modal-close aria-label="Close">&times;</button>
+            </div>
+            <form id="goalForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="goalName">Goal Name *</label>
+                        <div class="input-with-icon">
+                            <i class="fa-solid fa-flag"></i>
+                            <input type="text" id="goalName" placeholder="e.g. New Car, Trip to Japan, Emergency Fund" required />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="goalTarget">Target Amount *</label>
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-bullseye"></i>
+                                <input type="number" id="goalTarget" placeholder="50000" min="1" required />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="goalDeadline">Target Deadline</label>
+                            <input type="date" id="goalDeadline" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-plus"></i> Create Goal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Add Funds to Goal -->
+    <div class="modal-overlay" id="addFundsModal">
+        <div class="modal-box modal-box-sm">
+            <div class="modal-header">
+                <h3>Deposit to Goal</h3>
+                <button type="button" class="modal-close" data-modal-close aria-label="Close">&times;</button>
+            </div>
+            <form id="addFundsForm">
+                <input type="hidden" id="addFundsGoalId" value="" />
+                <div class="modal-body">
+                    <p id="addFundsGoalName" class="deposit-goal-name"></p>
+                    <div class="form-group">
+                        <label for="addFundsAmount">Amount to Add *</label>
+                        <div class="input-with-icon">
+                            <i class="fa-solid fa-piggy-bank"></i>
+                            <input type="number" id="addFundsAmount" placeholder="1000" min="1" step="any" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fa-solid fa-plus"></i> Deposit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Export / Backup / Print -->
+    <div class="modal-overlay" id="exportModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Data Export & Portability</h3>
+                <button type="button" class="modal-close" data-modal-close aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body modal-body-stack">
+                <p class="modal-desc">
+                    Export your financial data for spreadsheets or make complete portable backups.
+                </p>
+
+                <div class="export-grid">
+                    <button type="button" class="btn btn-outline btn-export" id="exportCsvBtn">
+                        <i class="fa-solid fa-file-csv text-income export-icon"></i>
+                        <span>Export CSV (Excel)</span>
+                    </button>
+
+                    <button type="button" class="btn btn-outline btn-export" id="exportJsonBtn">
+                        <i class="fa-solid fa-file-code text-primary export-icon"></i>
+                        <span>Download JSON Backup</span>
+                    </button>
+                </div>
+
+                <div class="backup-box">
+                    <p class="backup-box-title">Restore from JSON Backup</p>
+                    <input type="file" id="importJsonInput" accept=".json" class="d-none" title="Restore JSON backup file" aria-label="Restore JSON backup file" />
+                    <button type="button" class="btn btn-outline btn-sm btn-full" id="triggerImportBtn" onclick="document.getElementById('importJsonInput').click()">
+                        <i class="fa-solid fa-upload"></i> Upload & Restore Backup File
+                    </button>
+                </div>
+
+                <button type="button" class="btn btn-outline btn-mt" id="printReportBtn" onclick="window.print()">
+                    <i class="fa-solid fa-print"></i> Print Financial Statement / PDF
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-modal-close>Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Confirmation Dialog -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-box modal-box-sm">
+            <div class="modal-header">
+                <h3 id="confirmModalTitle">Are you sure?</h3>
+                <button type="button" class="modal-close" data-modal-close aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmModalMessage" class="confirm-message">
+                    This action cannot be undone.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+                <button type="button" class="btn btn-primary btn-danger" id="confirmModalOkBtn">
+                    Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: View Receipt Lightbox -->
+    <div class="modal-overlay" id="receiptModal">
+        <div class="modal-box modal-box-receipt">
+            <div class="modal-header">
+                <h3 id="receiptModalTitle">Attached Receipt</h3>
+                <button type="button" class="modal-close" data-modal-close aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body modal-receipt-body">
+                <img id="receiptModalImg" src="" alt="Receipt Preview" class="receipt-lightbox-img d-none" />
+                <div id="receiptModalPdf" class="receipt-pdf-box d-none">
+                    <i class="fa-solid fa-file-pdf"></i>
+                    <p>PDF Invoice Attached</p>
+                    <a id="receiptDownloadLink" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">
+                        <i class="fa-solid fa-download"></i> Open / Download PDF
+                    </a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a id="receiptExternalLink" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Open in Cloudinary
+                </a>
+                <button type="button" class="btn btn-primary" data-modal-close>Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Mobile Floating Action Button -->
+    <button class="mobile-fab" id="mobileAddTxBtn" aria-label="Add Transaction" title="Add Transaction">
+        <i class="fa-solid fa-plus"></i>
+    </button>
+
+    <!-- Application Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/statementImport.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

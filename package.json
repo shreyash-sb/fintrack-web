@@ -1,0 +1,38 @@
+{
+  "name": "fintrack",
+  "version": "2.0.0",
+  "description": "Smart Expense Tracker & Financial Management Platform with Node.js and MySQL",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js",
+    "db:init": "node backend/database/init.js"
+  },
+  "keywords": [
+    "expense-tracker",
+    "finance",
+    "mysql",
+    "express",
+    "dashboard",
+    "analytics"
+  ],
+  "author": "",
+  "private": true,
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@google/genai": "^3.0.0",
+    "bcryptjs": "^2.4.3",
+    "cloudinary": "^2.11.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.5.0",
+    "mysql2": "^3.12.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
