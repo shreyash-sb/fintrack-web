@@ -59,7 +59,7 @@ app.get('*', (req, res, next) => {
 app.use(errorHandler);
 
 // Server boot
-app.listen(PORT, async () => {
+const server = app.listen(PORT, async () => {
     console.log(`🚀 Fintrack running on http://localhost:${PORT}`);
 
     // Verify DB Connection & run migrations
@@ -70,6 +70,17 @@ app.listen(PORT, async () => {
     } else {
         console.warn(`⚠️ MySQL connection error: ${dbTest.error}`);
         console.warn(`💡 Check DB credentials in .env and verify MySQL is running.`);
+    }
+});
+
+server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+        console.error(`\n❌ Port ${PORT} is already in use by another process.`);
+        console.error(`💡 Stop the process using port ${PORT} or change PORT in .env\n`);
+        process.exit(1);
+    } else {
+        console.error('Server error:', err);
+        process.exit(1);
     }
 });
 
